@@ -1,7 +1,7 @@
 /**
  * Created by Hans Dulimarta on 2/1/17.
  */
-class Globe {
+class holder {
     /**
      * Create a 3D cone with tip at the Z+ axis and base on the XY plane
      * @param {Object} gl      the current WebGL context

@@ -92,11 +92,11 @@ class Globe {
             var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
             this.indices.push(x);
         }
-        vertices.push(0, 0, 0);
-        /* center of base */
-        vec3.lerp(randColor, col1, col2, Math.random());
-        /* linear interpolation between two colors */
-        vertices.push(randColor[0], randColor[1], randColor[2]);
+        // vertices.push(0, 0, 0);
+        // /* center of base */
+        // vec3.lerp(randColor, col1, col2, Math.random());
+        // /* linear interpolation between two colors */
+        // vertices.push(randColor[0], randColor[1], randColor[2]);
 
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
@@ -113,21 +113,21 @@ class Globe {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(topIndex), gl.STATIC_DRAW);
 
         // Generate index order for bottom of cone
-        let botIndex = [];
-        botIndex.push(vertexNum);
-        for (let k = vertexNum-1; k >= vertexNum-subDiv; k--)
-            botIndex.push(k);
-        botIndex.push(botIndex[1]);
-        this.botIdxBuff = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.botIdxBuff);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(botIndex), gl.STATIC_DRAW);
+        // let botIndex = [];
+        // botIndex.push(vertexNum);
+        // for (let k = vertexNum-1; k >= vertexNum-subDiv; k--)
+        //     botIndex.push(k);
+        // botIndex.push(botIndex[1]);
+        // this.botIdxBuff = gl.createBuffer();
+        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.botIdxBuff);
+        // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(botIndex), gl.STATIC_DRAW);
 
         /* Put the indices as an array of objects. Each object has three attributes:
          primitive, buffer, and numPoints */
         var top = {"primitive": gl.TRIANGLE_FAN, "buffer": this.topIdxBuff, "numPoints": topIndex.length};
-        var bottom = {"primitive": gl.TRIANGLE_FAN, "buffer": this.botIdxBuff, "numPoints": botIndex.length};
+        //var bottom = {"primitive": gl.TRIANGLE_FAN, "buffer": this.botIdxBuff, "numPoints": botIndex.length};
         this.indices.push(top);
-        this.indices.push(bottom);
+        //this.indices.push(bottom);
     }
 
     /**
