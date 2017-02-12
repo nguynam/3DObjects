@@ -1,7 +1,7 @@
 /**
  * Created by Hans Dulimarta on 2/1/17.
  */
-class Globe {
+class Cylinder {
     /**
      * Create a 3D cone with tip at the Z+ axis and base on the XY plane
      * @param {Object} gl      the current WebGL context
@@ -11,53 +11,47 @@ class Globe {
      * @param {vec3}   col1    color #1 to use
      * @param {vec3}   col2    color #2 to use
      */
-    constructor(gl, radius, subDiv, verDiv, col1, col2) {
+    constructor(gl, bottomRadius, topRadius, height, subDiv, verDiv, col1, col2) {
 
         /* if colors are undefined, generate random colors */
         if (typeof col1 === "undefined") col1 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         if (typeof col2 === "undefined") col2 = vec3.fromValues(Math.random(), Math.random(), Math.random());
-        let height = radius;
-        let vertices = [];
         let randColor = vec3.create();
+        let vertices = [];
         this.vbuff = gl.createBuffer();
         let heightStep = height / verDiv;
-        let circleStep = 90 / verDiv;
-        let startAngle = 90 - circleStep;
+        let radiusStep = (bottomRadius-topRadius)/verDiv;
+        let radius = topRadius;
 
         /* Instead of allocating two separate JS arrays (one for position and one for color),
          in the following loop we pack both position and color
          so each tuple (x,y,z,r,g,b) describes the properties of a vertex
          */
-
+        height -= heightStep;
         vertices.push(0, 0, height);
-        vertexNum++;
-        /* tip of globe */
+        /* tip of cone */
         vec3.lerp(randColor, col1, col2, Math.random());
         /* linear interpolation between two colors */
         vertices.push(randColor[0], randColor[1], randColor[2]);
-        height -= heightStep;
 
         var firstCircle = [];
         var secondCircle = [];
         this.indices = [];
         var vertexNum = 1;
         for (let i = 0; i < verDiv; i++) {
-
             let stackIndex = [];
             if(i > 1){
                 firstCircle = secondCircle;
                 secondCircle = [];
             }
 
-            let circRad = radius * Math.cos(startAngle * (Math.PI / 180));
-            let circHeight = (radius * Math.sin(startAngle * (Math.PI / 180)));
             for (let k = 0; k < subDiv; k++) {
                 let angle = k * 2 * Math.PI / subDiv;
-                let x = circRad * Math.cos(angle);
-                let y = circRad * Math.sin(angle);
+                let x = radius * Math.cos(angle);
+                let y = radius * Math.sin(angle);
 
                 /* the first three floats are 3D (x,y,z) position */
-                vertices.push(x, y, circHeight);
+                vertices.push(x, y, height);
 
                 if(i == 0){
                     firstCircle.push(vertexNum);
@@ -78,7 +72,8 @@ class Globe {
                 /* the next three floats are RGB */
                 vertices.push(randColor[0], randColor[1], randColor[2]);
             }
-            startAngle -= circleStep;
+            radius += radiusStep;
+            height -= heightStep;
             if(i >= 1){
                 for(var j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
@@ -94,11 +89,11 @@ class Globe {
             var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
             this.indices.push(x);
         }
-        // vertices.push(0, 0, 0);
-        // /* center of base */
-        // vec3.lerp(randColor, col1, col2, Math.random());
-        // /* linear interpolation between two colors */
-        // vertices.push(randColor[0], randColor[1], randColor[2]);
+        vertices.push(0, 0, 0);
+        /* center of base */
+        vec3.lerp(randColor, col1, col2, Math.random());
+        /* linear interpolation between two colors */
+        vertices.push(randColor[0], randColor[1], randColor[2]);
 
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
@@ -115,21 +110,21 @@ class Globe {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(topIndex), gl.STATIC_DRAW);
 
         // Generate index order for bottom of cone
-        // let botIndex = [];
-        // botIndex.push(vertexNum);
-        // for (let k = vertexNum-1; k >= vertexNum-subDiv; k--)
-        //     botIndex.push(k);
-        // botIndex.push(botIndex[1]);
-        // this.botIdxBuff = gl.createBuffer();
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.botIdxBuff);
-        // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(botIndex), gl.STATIC_DRAW);
+        let botIndex = [];
+        botIndex.push(vertexNum);
+        for (let k = vertexNum-1; k >= vertexNum-subDiv; k--)
+            botIndex.push(k);
+        botIndex.push(botIndex[1]);
+        this.botIdxBuff = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.botIdxBuff);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(botIndex), gl.STATIC_DRAW);
 
         /* Put the indices as an array of objects. Each object has three attributes:
          primitive, buffer, and numPoints */
         var top = {"primitive": gl.TRIANGLE_FAN, "buffer": this.topIdxBuff, "numPoints": topIndex.length};
-        //var bottom = {"primitive": gl.TRIANGLE_FAN, "buffer": this.botIdxBuff, "numPoints": botIndex.length};
+        var bottom = {"primitive": gl.TRIANGLE_FAN, "buffer": this.botIdxBuff, "numPoints": botIndex.length};
         this.indices.push(top);
-        //this.indices.push(bottom);
+        this.indices.push(bottom);
     }
 
     /**

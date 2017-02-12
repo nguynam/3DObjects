@@ -95,7 +95,13 @@ function createObject() {
       obj = new Cone(gl, radius, height, subDiv, verDiv);
       break;
     case 1:
-        //cylinder
+        let cylinderHeight = document.getElementById("cylinder-height").valueAsNumber;
+        let cylinderBottomRadius = document.getElementById("cylinder-bottom-radius").valueAsNumber;
+        let cylinderTopRadius = document.getElementById("cylinder-top-radius").valueAsNumber;
+        let cylinderSubDiv = document.getElementById("cylinder-subdiv").valueAsNumber;
+        let cylinderVerDiv = document.getElementById("cylinder-vertical-stacks").valueAsNumber;
+        console.log ("Cylinder Top Radius: " + cylinderTopRadius + "Cylinder Bottom Radius: " + cylinderBottomRadius + " height: " + cylinderHeight + " sub division: " + cylinderSubDiv);
+        obj = new Cylinder(gl, cylinderBottomRadius, cylinderTopRadius, cylinderHeight, cylinderSubDiv, cylinderVerDiv);
         break;
 
       case 2:
