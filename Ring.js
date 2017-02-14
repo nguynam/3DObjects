@@ -31,14 +31,20 @@ class Ring {
         var secondCircle = [];
         var firstOuterCircle = [];
         var secondOuterCircle = [];
+        var firstInnerCircle = [];
+        var secondInnerCircle = [];
+
         this.indices = [];
         var vertexNum = 0;
         for (let i = 0; i < verDiv; i++) {
             let stackIndex = [];
+            let innerIndex = [];
             let circIndex = [];
-            if(i > 1){
+            if (i > 1) {
                 firstOuterCircle = secondOuterCircle;
+                firstInnerCircle = secondInnerCircle
                 secondOuterCircle = [];
+                secondInnerCircle = [];
             }
 
             for (let j = 0; j < 2; j++) {
@@ -50,11 +56,17 @@ class Ring {
                     /* the first three floats are 3D (x,y,z) position */
                     vertices.push(x, y, height);
 
-                    if(i == 0 && j == 0){
+                    if (i == 0 && j == 0) {
                         firstOuterCircle.push(vertexNum);
                     }
-                    else if(i >= 1 && j == 0){
+                    else if (i >= 1 && j == 0) {
                         secondOuterCircle.push(vertexNum);
+                    }
+                    else if (i == 0 && j > 0){
+                        firstInnerCircle.push(vertexNum);
+                    }
+                    else if (i >= 1 && j > 0){
+                        secondInnerCircle.push(vertexNum);
                     }
 
                     if (j == 0) {
@@ -75,56 +87,68 @@ class Ring {
             }
             currentRadius = outerRadius;
             height -= heightStep;
-            for (var l = 0; l < subDiv; l++) {
-                circIndex.push(firstCircle[l]);
-                circIndex.push(secondCircle[l]);
-            }
-            circIndex.push(circIndex[0]);
-            circIndex.push(circIndex[1]);
-            this.circIdxBuff = gl.createBuffer();
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.circIdxBuff);
-            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(circIndex), gl.STATIC_DRAW);
+            if(i == 0){
+                for (var l = 0; l < subDiv; l++) {
+                    circIndex.push(secondCircle[l]);
+                    circIndex.push(firstCircle[l]);
+                }
+                circIndex.push(circIndex[0]);
+                circIndex.push(circIndex[1]);
+                this.circIdxBuff = gl.createBuffer();
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.circIdxBuff);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(circIndex), gl.STATIC_DRAW);
 
-            var y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
-            this.indices.push(y);
+                var y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
+                this.indices.push(y);
+            }
+            else{
+                for (var l = 0; l < subDiv; l++) {
+                    circIndex.push(firstCircle[l]);
+                    circIndex.push(secondCircle[l]);
+                }
+                circIndex.push(circIndex[0]);
+                circIndex.push(circIndex[1]);
+                this.circIdxBuff = gl.createBuffer();
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.circIdxBuff);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(circIndex), gl.STATIC_DRAW);
+
+                var y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
+                this.indices.push(y);
+            }
             firstCircle = [];
             secondCircle = [];
 
-            if(i >= 1){
-                for(let m = 0; m < subDiv; m++){
+            if (i >= 1) {
+                for (let m = 0; m < subDiv; m++) {
                     stackIndex.push(firstOuterCircle[m]);
                     stackIndex.push(secondOuterCircle[m]);
+                    innerIndex.push(secondInnerCircle[m]);
+                    innerIndex.push(firstInnerCircle[m]);
                 }
                 stackIndex.push(stackIndex[0]);
                 stackIndex.push(stackIndex[1]);
+                innerIndex.push(innerIndex[0]);
+                innerIndex.push(innerIndex[1]);
                 this.stackIdxBuff = gl.createBuffer();
+                this.innerIdxBuff = gl.createBuffer();
+
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(stackIndex), gl.STATIC_DRAW);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.innerIdxBuff);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(innerIndex), gl.STATIC_DRAW);
 
                 var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
                 this.indices.push(x);
+                var z = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.innerIdxBuff, "numPoints": innerIndex.length};
+                this.indices.push(z);
+
             }
         }
-        // vertices.push(0, 0, 0);
-        // /* center of base */
-        // vec3.lerp(randColor, col1, col2, Math.random());
-        // /* linear interpolation between two colors */
-        // vertices.push(randColor[0], randColor[1], randColor[2]);
 
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
         gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertices), gl.STATIC_DRAW);
 
-        // Generate index order for top of cone
-        // let topIndex = [];
-        // topIndex.push(0);
-        // for (let k = 1; k <= subDiv; k++)
-        //     topIndex.push(k);
-        // topIndex.push(1);
-        // this.topIdxBuff = gl.createBuffer();
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.topIdxBuff);
-        // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(topIndex), gl.STATIC_DRAW);
-        //
         // // Generate index order for bottom of cone
         // let botIndex = [];
         // botIndex.push(vertexNum);
