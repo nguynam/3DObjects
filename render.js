@@ -40,6 +40,7 @@ function main() {
     gl.useProgram (prog);
     gl.clearColor (0, 0, 0, 1);
     gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST);
     gl.cullFace(gl.BACK);
 
     /* the vertex shader defines TWO attribute vars and ONE uniform var */

@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="90e7574a-5a6c-4521-8345-a9966afde313" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Ring.js" afterPath="$PROJECT_DIR$/Ring.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/render.js" afterPath="$PROJECT_DIR$/render.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -26,8 +28,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="88" column="112" lean-forward="false" selection-start-line="88" selection-start-column="112" selection-end-line="88" selection-end-column="112" />
+            <state relative-caret-position="418">
+              <caret line="92" column="107" lean-forward="true" selection-start-line="92" selection-start-column="107" selection-end-line="92" selection-end-column="107" />
               <folding />
             </state>
           </provider>
@@ -36,8 +38,8 @@
       <file leaf-file-name="render.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/render.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="132" column="24" lean-forward="true" selection-start-line="132" selection-start-column="24" selection-end-line="132" selection-end-column="24" />
+            <state relative-caret-position="398">
+              <caret line="42" column="29" lean-forward="false" selection-start-line="42" selection-start-column="29" selection-end-line="42" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -46,8 +48,8 @@
       <file leaf-file-name="Ring.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Ring.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="67">
-              <caret line="89" column="21" lean-forward="false" selection-start-line="89" selection-start-column="21" selection-end-line="89" selection-end-column="21" />
+            <state relative-caret-position="165">
+              <caret line="43" column="41" lean-forward="true" selection-start-line="43" selection-start-column="41" selection-end-line="43" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -102,6 +104,7 @@
       <find>x</find>
       <find>Globe</find>
       <find>height</find>
+      <find>uint</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -113,9 +116,9 @@
         <option value="$PROJECT_DIR$/holder.js" />
         <option value="$PROJECT_DIR$/Cylinder.js" />
         <option value="$PROJECT_DIR$/Globe.js" />
-        <option value="$PROJECT_DIR$/render.js" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/Cone.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/render.js" />
         <option value="$PROJECT_DIR$/Ring.js" />
       </list>
     </option>
@@ -260,7 +263,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25388000" />
+    <option name="totallyTimeSpent" value="29095000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -696,24 +699,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="88" column="112" lean-forward="false" selection-start-line="88" selection-start-column="112" selection-end-line="88" selection-end-column="112" />
+        <state relative-caret-position="418">
+          <caret line="92" column="107" lean-forward="true" selection-start-line="92" selection-start-column="107" selection-end-line="92" selection-end-column="107" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/render.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="132" column="24" lean-forward="true" selection-start-line="132" selection-start-column="24" selection-end-line="132" selection-end-column="24" />
+        <state relative-caret-position="398">
+          <caret line="42" column="29" lean-forward="false" selection-start-line="42" selection-start-column="29" selection-end-line="42" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Ring.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="67">
-          <caret line="89" column="21" lean-forward="false" selection-start-line="89" selection-start-column="21" selection-end-line="89" selection-end-column="21" />
+        <state relative-caret-position="165">
+          <caret line="43" column="41" lean-forward="true" selection-start-line="43" selection-start-column="41" selection-end-line="43" selection-end-column="41" />
           <folding />
         </state>
       </provider>

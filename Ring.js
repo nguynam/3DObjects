@@ -37,12 +37,12 @@ class Ring {
         this.indices = [];
         var vertexNum = 0;
         for (let i = 0; i < verDiv; i++) {
-            let stackIndex = [];
+            let outerIndex = [];
             let innerIndex = [];
             let circIndex = [];
             if (i > 1) {
                 firstOuterCircle = secondOuterCircle;
-                firstInnerCircle = secondInnerCircle
+                firstInnerCircle = secondInnerCircle;
                 secondOuterCircle = [];
                 secondInnerCircle = [];
             }
@@ -87,6 +87,7 @@ class Ring {
             }
             currentRadius = outerRadius;
             height -= heightStep;
+            var last = verDiv - 1;
             if(i == 0){
                 for (var l = 0; l < subDiv; l++) {
                     circIndex.push(secondCircle[l]);
@@ -96,12 +97,12 @@ class Ring {
                 circIndex.push(circIndex[1]);
                 this.circIdxBuff = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.circIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(circIndex), gl.STATIC_DRAW);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(circIndex), gl.STATIC_DRAW);
 
                 var y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
                 this.indices.push(y);
             }
-            else{
+            else if (i == last){
                 for (var l = 0; l < subDiv; l++) {
                     circIndex.push(firstCircle[l]);
                     circIndex.push(secondCircle[l]);
@@ -110,7 +111,7 @@ class Ring {
                 circIndex.push(circIndex[1]);
                 this.circIdxBuff = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.circIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(circIndex), gl.STATIC_DRAW);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(circIndex), gl.STATIC_DRAW);
 
                 var y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
                 this.indices.push(y);
@@ -120,51 +121,33 @@ class Ring {
 
             if (i >= 1) {
                 for (let m = 0; m < subDiv; m++) {
-                    stackIndex.push(firstOuterCircle[m]);
-                    stackIndex.push(secondOuterCircle[m]);
+                    outerIndex.push(firstOuterCircle[m]);
+                    outerIndex.push(secondOuterCircle[m]);
                     innerIndex.push(secondInnerCircle[m]);
                     innerIndex.push(firstInnerCircle[m]);
                 }
-                stackIndex.push(stackIndex[0]);
-                stackIndex.push(stackIndex[1]);
+                outerIndex.push(outerIndex[0]);
+                outerIndex.push(outerIndex[1]);
                 innerIndex.push(innerIndex[0]);
                 innerIndex.push(innerIndex[1]);
                 this.stackIdxBuff = gl.createBuffer();
                 this.innerIdxBuff = gl.createBuffer();
 
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(stackIndex), gl.STATIC_DRAW);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(outerIndex), gl.STATIC_DRAW);
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.innerIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(innerIndex), gl.STATIC_DRAW);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(innerIndex), gl.STATIC_DRAW);
 
-                var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
+                var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": outerIndex.length};
                 this.indices.push(x);
                 var z = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.innerIdxBuff, "numPoints": innerIndex.length};
                 this.indices.push(z);
 
             }
         }
-
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
         gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertices), gl.STATIC_DRAW);
-
-        // // Generate index order for bottom of cone
-        // let botIndex = [];
-        // botIndex.push(vertexNum);
-        // for (let k = vertexNum-1; k >= vertexNum-subDiv; k--)
-        //     botIndex.push(k);
-        // botIndex.push(botIndex[1]);
-        // this.botIdxBuff = gl.createBuffer();
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.botIdxBuff);
-        // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(botIndex), gl.STATIC_DRAW);
-        //
-        // /* Put the indices as an array of objects. Each object has three attributes:
-        //  primitive, buffer, and numPoints */
-        // var top = {"primitive": gl.TRIANGLE_FAN, "buffer": this.topIdxBuff, "numPoints": topIndex.length};
-        // var bottom = {"primitive": gl.TRIANGLE_FAN, "buffer": this.botIdxBuff, "numPoints": botIndex.length};
-        // this.indices.push(top);
-        // this.indices.push(bottom);
     }
 
     /**
@@ -191,7 +174,7 @@ class Ring {
         for (let k = 0; k < this.indices.length; k++) {
             let obj = this.indices[k];
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.buffer);
-            gl.drawElements(obj.primitive, obj.numPoints, gl.UNSIGNED_BYTE, 0);
+            gl.drawElements(obj.primitive, obj.numPoints, gl.UNSIGNED_SHORT, 0);
         }
     }
 }
