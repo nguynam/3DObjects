@@ -26,70 +26,64 @@ class Ring {
          in the following loop we pack both position and color
          so each tuple (x,y,z,r,g,b) describes the properties of a vertex
          */
-        vertices.push(0, 0, height);
-        /* tip of cone */
-        vec3.lerp(randColor, col1, col2, Math.random());
-        /* linear interpolation between two colors */
-        vertices.push(randColor[0], randColor[1], randColor[2]);
-        //height -= heightStep;
+        // vertices.push(0, 0, height);
+        // /* tip of cone */
+        // vec3.lerp(randColor, col1, col2, Math.random());
+        // /* linear interpolation between two colors */
+        // vertices.push(randColor[0], randColor[1], randColor[2]);
 
         var firstCircle = [];
         var secondCircle = [];
         this.indices = [];
-        var vertexNum = 1;
-        verDiv *= 2;
-        verDiv += 4;
+        var vertexNum = 0;
         for (let i = 0; i < verDiv; i++) {
             let stackIndex = [];
-            if(i > 1){
-                firstCircle = secondCircle;
-                secondCircle = [];
+
+            for (let j = 0; j < 2; j++) {
+                for (let k = 0; k < subDiv; k++) {
+                    let angle = k * 2 * Math.PI / subDiv;
+                    let x = currentRadius * Math.cos(angle);
+                    let y = currentRadius * Math.sin(angle);
+
+                    /* the first three floats are 3D (x,y,z) position */
+                    vertices.push(x, y, height);
+
+                    if (j == 0) {
+                        firstCircle.push(vertexNum);
+                        vertexNum++;
+                    }
+                    else if (j == 1) {
+                        secondCircle.push(vertexNum);
+                        vertexNum++;
+                    }
+                    else if (j > 1) {
+                        secondCircle.push(vertexNum);
+                        vertexNum++;
+                    }
+                    /* perimeter of base */
+                    vec3.lerp(randColor, col1, col2, Math.random());
+                    /* linear interpolation between two colors */
+                    /* the next three floats are RGB */
+                    vertices.push(randColor[0], randColor[1], randColor[2]);
+                }
+                currentRadius = innerRadius;
             }
-
-            for (let k = 0; k < subDiv; k++) {
-                let angle = k * 2 * Math.PI / subDiv;
-                let x = currentRadius * Math.cos(angle);
-                let y = currentRadius * Math.sin(angle);
-
-                /* the first three floats are 3D (x,y,z) position */
-                vertices.push(x, y, height);
-
-                if(i == 0){
-                    firstCircle.push(vertexNum);
-                    vertexNum++;
-                }
-                else if(i == 1){
-                    secondCircle.push(vertexNum);
-                    vertexNum++;
-                }
-                else if(i > 1){
-                    secondCircle.push(vertexNum);
-                    vertexNum++;
-                }
-
-                /* perimeter of base */
-                vec3.lerp(randColor, col1, col2, Math.random());
-                /* linear interpolation between two colors */
-                /* the next three floats are RGB */
-                vertices.push(randColor[0], randColor[1], randColor[2]);
+            currentRadius = outerRadius;
+            height -= heightStep;
+            for (var l = 0; l < subDiv; l++) {
+                stackIndex.push(firstCircle[l]);
+                stackIndex.push(secondCircle[l]);
             }
-            currentRadius = innerRadius;
-            if(i >= 1 && i%2 == 0){
-                currentRadius = outerRadius;
-                height -= heightStep;
-                for(var j = 0; j < subDiv; j++){
-                    stackIndex.push(firstCircle[j]);
-                    stackIndex.push(secondCircle[j]);
-                }
-                stackIndex.push(stackIndex[0]);
-                stackIndex.push(stackIndex[1]);
-                this.stackIdxBuff = gl.createBuffer();
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(stackIndex), gl.STATIC_DRAW);
-            }
+            stackIndex.push(stackIndex[0]);
+            stackIndex.push(stackIndex[1]);
+            this.stackIdxBuff = gl.createBuffer();
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(stackIndex), gl.STATIC_DRAW);
 
             var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
             this.indices.push(x);
+            firstCircle = [];
+            secondCircle = [];
         }
         // vertices.push(0, 0, 0);
         // /* center of base */
