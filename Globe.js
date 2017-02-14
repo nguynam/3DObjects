@@ -53,7 +53,7 @@ class Globe {
 
             let circRad = radius * Math.cos(startAngle * (Math.PI / 180));
             let circHeight = (radius * Math.sin(startAngle * (Math.PI / 180)));
-            for (let k = 0; k < var2; k++) {
+            for (let k = 0; k < subDiv; k++) {
                 let angle = k * 2 * Math.PI / subDiv;
                 let x = circRad * Math.cos(angle);
                 let y = circRad * Math.sin(angle);
