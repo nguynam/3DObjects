@@ -17,7 +17,8 @@ class Globe {
         if (typeof col1 === "undefined") col1 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         if (typeof col2 === "undefined") col2 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         let height = radius;
-        let vertices = [];
+        let topVertices = [];
+        let bottomVertices = [];
         let randColor = vec3.create();
         this.vbuff = gl.createBuffer();
         let heightStep = height / verDiv;
@@ -29,18 +30,20 @@ class Globe {
          so each tuple (x,y,z,r,g,b) describes the properties of a vertex
          */
 
-        vertices.push(0, 0, height);
+        topVertices.push(0, 0, height);
+
         /* tip of globe */
         vec3.lerp(randColor, col1, col2, Math.random());
         /* linear interpolation between two colors */
-        vertices.push(randColor[0], randColor[1], randColor[2]);
+        topVertices.push(randColor[0], randColor[1], randColor[2]);
         height -= heightStep;
 
-        var firstCircle = [];
-        var secondCircle = [];
+        let firstCircle = [];
+        let secondCircle = [];
         this.indices = [];
-        var vertexNum = 1;
-        for (let i = 0; i < verDiv; i++) {
+        let vertexNum = 1;
+        let var2 = verDiv * 2;
+        for (let i = 0; i < var2; i++) {
 
             let stackIndex = [];
             if(i > 1){
@@ -50,23 +53,18 @@ class Globe {
 
             let circRad = radius * Math.cos(startAngle * (Math.PI / 180));
             let circHeight = (radius * Math.sin(startAngle * (Math.PI / 180)));
-            for (let k = 0; k < subDiv; k++) {
+            for (let k = 0; k < var2; k++) {
                 let angle = k * 2 * Math.PI / subDiv;
                 let x = circRad * Math.cos(angle);
                 let y = circRad * Math.sin(angle);
 
                 /* the first three floats are 3D (x,y,z) position */
-                vertices.push(x, y, circHeight);
+                topVertices.push(x, y, circHeight);
 
-                if(i == 0){
+                if(i == 0) {
                     firstCircle.push(vertexNum);
                     vertexNum++;
-                }
-                else if(i == 1){
-                    secondCircle.push(vertexNum);
-                    vertexNum++;
-                }
-                else if(i > 1){
+                } else if(i > 0) {
                     secondCircle.push(vertexNum);
                     vertexNum++;
                 }
@@ -75,7 +73,7 @@ class Globe {
                 vec3.lerp(randColor, col1, col2, Math.random());
                 /* linear interpolation between two colors */
                 /* the next three floats are RGB */
-                vertices.push(randColor[0], randColor[1], randColor[2]);
+                topVertices.push(randColor[0], randColor[1], randColor[2]);
             }
             startAngle -= circleStep;
             if(i >= 1){
@@ -87,7 +85,7 @@ class Globe {
                 stackIndex.push(stackIndex[1]);
                 this.stackIdxBuff = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(stackIndex), gl.STATIC_DRAW);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
             }
 
             var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
@@ -96,7 +94,7 @@ class Globe {
 
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
-        gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(topVertices), gl.STATIC_DRAW);
 
         // Generate index order for top of cone
         let topIndex = [];
@@ -106,7 +104,7 @@ class Globe {
         topIndex.push(1);
         this.topIdxBuff = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.topIdxBuff);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(topIndex), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(topIndex), gl.STATIC_DRAW);
 
         // Generate index order for bottom of cone
         // let botIndex = [];
@@ -150,7 +148,7 @@ class Globe {
         for (let k = 0; k < this.indices.length; k++) {
             let obj = this.indices[k];
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.buffer);
-            gl.drawElements(obj.primitive, obj.numPoints, gl.UNSIGNED_BYTE, 0);
+            gl.drawElements(obj.primitive, obj.numPoints, gl.UNSIGNED_SHORT, 0);
         }
     }
 }
