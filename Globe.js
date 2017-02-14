@@ -30,7 +30,6 @@ class Globe {
          */
 
         vertices.push(0, 0, height);
-        vertexNum++;
         /* tip of globe */
         vec3.lerp(randColor, col1, col2, Math.random());
         /* linear interpolation between two colors */
@@ -94,11 +93,6 @@ class Globe {
             var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
             this.indices.push(x);
         }
-        // vertices.push(0, 0, 0);
-        // /* center of base */
-        // vec3.lerp(randColor, col1, col2, Math.random());
-        // /* linear interpolation between two colors */
-        // vertices.push(randColor[0], randColor[1], randColor[2]);
 
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);

@@ -125,7 +125,13 @@ function createObject() {
         break;
 
       case 6:
-        //ring
+        let ringHeight = document.getElementById("ring-height").valueAsNumber;
+        let ringOuterRadius = document.getElementById("ring-outer-radius").valueAsNumber;
+        let ringInnerRadius = document.getElementById("ring-inner-radius").valueAsNumber;
+        let ringSubDiv = document.getElementById("ring-subdiv").valueAsNumber;
+        let ringVerDiv = document.getElementById("ring-vertical-stacks").valueAsNumber;
+        //console.log();
+        obj = new Ring(gl, ringOuterRadius, ringInnerRadius, ringHeight, ringSubDiv, ringVerDiv);
         break;
   }
 }

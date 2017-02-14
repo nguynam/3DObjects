@@ -9,6 +9,7 @@
   <script src="Cone.js"></script>
   <script src="Globe.js"></script>
   <script src="Cylinder.js"></script>
+  <script src="Ring.js"></script>
   <script src="render.js"></script>
   <style>
     #controls {
@@ -44,7 +45,7 @@
     Cone parameters:
     <ul>
       <li>height 0.2 <input id="cone-height" type="range" min="0.2" max="0.9" step="0.05" value="0.5"> 0.9</li>
-      <li>radius 0.2 <input id="cone-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.8</li>
+      <li>radius 0.2 <input id="cone-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.5</li>
       <li>sub division 6 <input id="cone-subdiv" type="range" min="6" max="30" step="1" value="12"> 30</li>
       <li>vertical stacks 1<input id ="cone-vertical-stacks" type="range" min="1" max="8" value="4"> 8</li>
     </ul>
@@ -53,8 +54,8 @@
     Cylinder parameters:
     <ul>
       <li>height 0.2 <input id="cylinder-height" type="range" min="0.2" max="0.9" step="0.05" value="0.5"> 0.9</li>
-      <li>top radius 0.2 <input id="cylinder-top-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.8</li>
-      <li>bottom radius 0.2 <input id="cylinder-bottom-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.8</li>
+      <li>top radius 0.2 <input id="cylinder-top-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.5</li>
+      <li>bottom radius 0.2 <input id="cylinder-bottom-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.5</li>
       <li>sub division 6 <input id="cylinder-subdiv" type="range" min="6" max="30" step="1" value="12"> 30</li>
       <li>vertical stacks 1<input id ="cylinder-vertical-stacks" type="range" min="1" max="8" value="4"> 8</li>
     </ul>
@@ -70,7 +71,7 @@
     Sphere parameters:
     <ul>
       <li>sub division 6 <input id="globe-subdiv" type="range" min="6" max="30" step="1" value="12"> 30</li>
-      <li>radius 0.2 <input id="globe-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.8</li>
+      <li>radius 0.2 <input id="globe-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.5</li>
       <li>vertical stacks 1<input id ="globe-vertical-stacks" type="range" min="1" max="8" value="1"> 8</li>
     </ul>
   </div>
@@ -88,7 +89,8 @@
       <li>outer radius 0.2 <input id="ring-outer-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.8</li>
       <li>inner radius 0.2 <input id="ring-inner-radius" type="range" min="0.2" max="0.5" step="0.05" value="0.3"> 0.8</li>
       <li>height 0.2 <input id="ring-height" type="range" min="0.2" max="0.9" step="0.05" value="0.5"> 0.9</li>
-      <li>vertical stacks 4<input id ="ring-vertical-stacks" type="range" min="1" max="10" value="4"> 10</li>
+      <li>vertical stacks 1<input id ="ring-vertical-stacks" type="range" min="1" max="8" value="4"> 8</li>
+      <li>sub division 6 <input id="ring-subdiv" type="range" min="6" max="30" step="1" value="12"> 30</li>
     </ul>
   </div>
 

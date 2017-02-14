@@ -37,6 +37,8 @@ class Ring {
         var secondCircle = [];
         this.indices = [];
         var vertexNum = 1;
+        verDiv *= 2;
+        verDiv += 4;
         for (let i = 0; i < verDiv; i++) {
             let stackIndex = [];
             if(i > 1){
@@ -72,8 +74,9 @@ class Ring {
                 vertices.push(randColor[0], randColor[1], randColor[2]);
             }
             currentRadius = innerRadius;
-            //height -= heightStep;
-            if(i >= 1){
+            if(i >= 1 && i%2 == 0){
+                currentRadius = outerRadius;
+                height -= heightStep;
                 for(var j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
                     stackIndex.push(secondCircle[j]);
