@@ -7,28 +7,42 @@ class Cube {
         let randColor = vec3.create();
         let step = size / (subDiv - 1);
 
+        //top face of the cube
         let top = [];
         this.topIndexBuff;
         this.topBuff = gl.createBuffer();
-
-        let bottom = [];
-        let frontBack = [];
-        let rightLeft = [];
-        this.indices = [];
         this.topIndices = [];
+
+        //bottom face of the cube
+        let bottom = [];
+        this.bottomIndexBuff;
+        this.bottomBuff = gl.createBuffer();
+        this.bottomIndices = [];
+
+        this.indices = [];
+
+        let x = -size / 2;
 
         //top and bottom of cube
         for (let row = 0; row < subDiv; row++) {
+            let y = -size / 2;
             for (let col = 0; col < subDiv; col++) {
                 vec3.lerp(randColor, col1, col2, Math.random());
-                /* linear interpolation between two colors */
-                /* the next three floats are RGB */
-                top.push(row * step, col * step, size);
+                top.push(x, y, size / 2);
                 top.push(randColor[0], randColor[1], randColor[2]);
+
+                bottom.push(x, y,  -size / 2);
+                bottom.push(randColor[0], randColor[1], randColor[2]);
+                y += step;
             }
+            x += step;
         }
+
         gl.bindBuffer(gl.ARRAY_BUFFER, this.topBuff);
         gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(top), gl.STATIC_DRAW);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.bottomBuff);
+        gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(bottom), gl.STATIC_DRAW);
 
         //right and left side of cube
 
@@ -40,6 +54,9 @@ class Cube {
                 if (k < subDiv - 1) {
                     this.topIndices.push(subDiv * k + l);
                     this.topIndices.push(subDiv * (k + 1) + l);
+
+                    this.bottomIndices.push(subDiv * k + l);
+                    this.bottomIndices.push(subDiv * (k + 1) + l);
                 }
             }
         }
@@ -50,6 +67,13 @@ class Cube {
 
         let topFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.topIndexBuff, "numPoints": this.topIndices.length};
         this.indices.push(topFace);
+
+        this.bottomIndexBuff = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bottomIndexBuff);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(this.bottomIndices), gl.STATIC_DRAW);
+
+        let bottomFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.bottomIndexBuff, "numPoints": this.bottomIndices.length};
+        this.indices.push(bottomFace);
     }
 
     draw(vertexAttr, colorAttr, modelUniform, coordFrame) {
