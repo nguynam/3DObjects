@@ -5,15 +5,17 @@ class Cube {
         if (typeof col1 === "undefined") col1 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         if (typeof col2 === "undefined") col2 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         let randColor = vec3.create();
-        let vertices = [];
         let step = size / (subDiv - 1);
+
         let top = [];
+        this.topIndexBuff;
+        this.topBuff = gl.createBuffer();
+
         let bottom = [];
         let frontBack = [];
         let rightLeft = [];
         this.indices = [];
         this.topIndices = [];
-        this.vbuff = gl.createBuffer();
 
         //top and bottom of cube
         for (let row = 0; row < subDiv; row++) {
@@ -25,14 +27,12 @@ class Cube {
                 top.push(randColor[0], randColor[1], randColor[2]);
             }
         }
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.topBuff);
+        gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(top), gl.STATIC_DRAW);
 
         //right and left side of cube
 
         //front and back side of cube
-
-        this.topBuff = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.topBuff);
-        gl.bufferData(gl.ARRAY_BUFFER, Uint16Array.from(top), gl.STATIC_DRAW);
 
         //generate the order of the points
         for (let k = 0; k < subDiv; k++) {
@@ -44,11 +44,12 @@ class Cube {
             }
         }
 
-        var x = {"primitive": gl.POINTS, "buffer": this.topBuff, "numPoints": top.length};
-        this.indices.push(x);
+        this.topIndexBuff = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.topIndexBuff);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(this.topIndices), gl.STATIC_DRAW);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.vbuff);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Float32Array.from(this.indices), gl.STATIC_DRAW);
+        let topFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.topIndexBuff, "numPoints": this.topIndices.length};
+        this.indices.push(topFace);
     }
 
     draw(vertexAttr, colorAttr, modelUniform, coordFrame) {
@@ -56,7 +57,7 @@ class Cube {
         gl.uniformMatrix4fv(modelUniform, false, coordFrame);
 
         /* binder the (vertex+color) buffer */
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.topIndexBuff);
 
         /* with the "packed layout"  (x,y,z,r,g,b),
          the stride distance between one group to the next is 24 bytes */
