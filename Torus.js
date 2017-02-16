@@ -68,7 +68,18 @@ class Torus {
                 vertices.push(randColor[0], randColor[1], randColor[2]);
             }
             startAngle += circleStep;
-            if(i >= 1){
+            if(i == verDiv){
+                for(var j = 0; j < subDiv; j++){
+                    stackIndex.push(firstCircle[j]);
+                    stackIndex.push(equator[j]);
+                }
+                stackIndex.push(stackIndex[0]);
+                stackIndex.push(stackIndex[1]);
+                this.stackIdxBuff = gl.createBuffer();
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
+            }
+            else if(i >= 1 && i != verDiv){
                 for(var j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
                     stackIndex.push(secondCircle[j]);
