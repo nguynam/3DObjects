@@ -107,6 +107,10 @@ function createObject() {
 
       case 2:
         //cube
+          let cubeSize = document.getElementById("cube-height").valueAsNumber;
+          let cubeSubDiv = document.getElementById("cube-subdiv").valueAsNumber;
+          //console.log();
+          obj = new Cube(gl, cubeSize, cubeSubDiv);
           break;
 
       case 3:
