@@ -110,11 +110,11 @@ function createObject() {
           break;
 
       case 3:
-      let gSubDiv = document.getElementById("globe-subdiv").valueAsNumber;
-      let gRadius = document.getElementById("globe-radius").valueAsNumber;
-      let gVerDiv = document.getElementById("globe-vertical-stacks").valueAsNumber;
-      console.log ("Hemishpere radius: " + gRadius + " sub division: " + gSubDiv);
-      obj = new Globe(gl, gRadius, gSubDiv, gVerDiv);
+        let gSubDiv = document.getElementById("globe-subdiv").valueAsNumber;
+        let gRadius = document.getElementById("globe-radius").valueAsNumber;
+        let gVerDiv = document.getElementById("globe-vertical-stacks").valueAsNumber;
+        console.log ("Hemishpere radius: " + gRadius + " sub division: " + gSubDiv);
+        obj = new Globe(gl, gRadius, gSubDiv, gVerDiv);
       break;
 
       case 4:
@@ -122,7 +122,12 @@ function createObject() {
         break;
 
       case 5:
-        //torus
+          let torusSubDiv = document.getElementById("torus-subdiv").valueAsNumber;
+          let torusBigRadius = document.getElementById("torus-big-radius").valueAsNumber;
+          let torusSmallRadius = document.getElementById("torus-small-radius").valueAsNumber;
+          let torusVerDiv = document.getElementById("torus-vertical-stacks").valueAsNumber;
+          //console.log ("Hemishpere radius: " + gRadius + " sub division: " + gSubDiv);
+          obj = new Torus(gl, torusBigRadius, torusSmallRadius, torusSubDiv, torusVerDiv);
         break;
 
       case 6:
