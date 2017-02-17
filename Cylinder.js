@@ -83,7 +83,7 @@ class Cylinder {
                 stackIndex.push(stackIndex[1]);
                 this.stackIdxBuff = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(stackIndex), gl.STATIC_DRAW);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
             }
 
             var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
@@ -107,7 +107,7 @@ class Cylinder {
         topIndex.push(1);
         this.topIdxBuff = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.topIdxBuff);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(topIndex), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(topIndex), gl.STATIC_DRAW);
 
         // Generate index order for bottom of cone
         let botIndex = [];
@@ -117,7 +117,7 @@ class Cylinder {
         botIndex.push(botIndex[1]);
         this.botIdxBuff = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.botIdxBuff);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(botIndex), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(botIndex), gl.STATIC_DRAW);
 
         /* Put the indices as an array of objects. Each object has three attributes:
          primitive, buffer, and numPoints */
@@ -151,7 +151,7 @@ class Cylinder {
         for (let k = 0; k < this.indices.length; k++) {
             let obj = this.indices[k];
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.buffer);
-            gl.drawElements(obj.primitive, obj.numPoints, gl.UNSIGNED_BYTE, 0);
+            gl.drawElements(obj.primitive, obj.numPoints, gl.UNSIGNED_SHORT, 0);
         }
     }
 }

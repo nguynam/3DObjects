@@ -5,6 +5,7 @@ class Cube {
         if (typeof col1 === "undefined") col1 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         if (typeof col2 === "undefined") col2 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         let randColor = vec3.create();
+
         this.indices = [];
         this.vbuff = gl.createBuffer();
         let step = size / (subDiv - 1);
@@ -25,6 +26,14 @@ class Cube {
         //back of the cube
         let back = [];
         this.backIndices = [];
+
+        //right face of the cube
+        let right = [];
+        this.rightIndices = [];
+
+        //left of the cube
+        let left = [];
+        this.leftIndices = [];
 
         //top and bottom of cube
         let x = -size / 2;
@@ -55,10 +64,25 @@ class Cube {
                 back.push(randColor[0], randColor[1], randColor[2]);
                 yy += step;
             }
-            x += step;
+            xx += step;
         }
 
         //right and left side of cube
+        let xxx = -size / 2;
+        for (let row = 0; row < subDiv; row++) {
+            let yyy = -size / 2;
+            for (let col = 0; col < subDiv; col++) {
+                vec3.lerp(randColor, col1, col2, Math.random());
+
+                right.push(xxx , size / 2, yyy)
+                right.push(randColor[0], randColor[1], randColor[2]);
+
+                left.push(xxx , -size / 2, yyy)
+                left.push(randColor[0], randColor[1], randColor[2]);
+                yyy += step;
+            }
+            xxx += step;
+        }
 
         //generate the order of the points
 
@@ -66,8 +90,8 @@ class Cube {
         for (let k = 0; k < subDiv; k++) {
             for (let l = 0; l < subDiv; l++) {
                 if (k < subDiv - 1) {
-                    this.topIndices.push(subDiv * k + l);
                     this.topIndices.push(subDiv * (k + 1) + l);
+                    this.topIndices.push(subDiv * k + l);
 
                     this.bottomIndices.push((subDiv * k + l) + facePoints);
                     this.bottomIndices.push((subDiv * (k + 1) + l) + facePoints);
@@ -77,6 +101,12 @@ class Cube {
 
                     this.backIndices.push((subDiv * k + l) + (facePoints * 3));
                     this.backIndices.push((subDiv * (k + 1) + l) + (facePoints * 3));
+
+                    this.rightIndices.push((subDiv * k + l) + (facePoints * 4));
+                    this.rightIndices.push((subDiv * (k + 1) + l) + (facePoints * 4));
+
+                    this.leftIndices.push((subDiv * (k + 1) + l) + (facePoints * 5));
+                    this.leftIndices.push((subDiv * k + l) + (facePoints * 5));
                 }
             }
         }
@@ -89,12 +119,20 @@ class Cube {
             vertices.push(bottom[botI]);
         }
 
-        for (let frontI = 0; frontI < bottom.length; frontI++) {
+        for (let frontI = 0; frontI < front.length; frontI++) {
             vertices.push(front[frontI]);
         }
 
-        for (let backI = 0; backI < bottom.length; backI++) {
+        for (let backI = 0; backI < back.length; backI++) {
             vertices.push(back[backI]);
+        }
+
+        for (let rightI = 0; rightI < right.length; rightI++) {
+            vertices.push(right[rightI]);
+        }
+
+        for (let leftI = 0; leftI < left.length; leftI++) {
+            vertices.push(left[leftI]);
         }
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
@@ -116,15 +154,29 @@ class Cube {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.backIdxBuff);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(this.backIndices), gl.STATIC_DRAW);
 
+        this.rightIdxBuff = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.rightIdxBuff);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(this.rightIndices), gl.STATIC_DRAW);
+
+        this.leftIdxBuff = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.leftIdxBuff);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(this.leftIndices), gl.STATIC_DRAW);
+
+
         let topFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.topIdxBuff, "numPoints": this.topIndices.length};
         let bottomFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.botIdxBuff, "numPoints": this.bottomIndices.length};
-        let frontFace = {"primitive": gl.POINTS, "buffer": this.frontIdxBuff, "numPoints": this.frontIndices.length};
-        let backFace = {"primitive": gl.POINTS, "buffer": this.backIdxBuff, "numPoints": this.backIndices.length};
+        let frontFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.frontIdxBuff, "numPoints": this.frontIndices.length};
+        let backFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.backIdxBuff, "numPoints": this.backIndices.length};
+        let rightFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.rightIdxBuff, "numPoints": this.rightIndices.length};
+        let leftFace = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.leftIdxBuff, "numPoints": this.leftIndices.length};
+
 
         this.indices.push(topFace);
         this.indices.push(bottomFace);
         this.indices.push(frontFace);
         this.indices.push(backFace);
+        this.indices.push(rightFace);
+        this.indices.push(leftFace);
     }
 
     draw(vertexAttr, colorAttr, modelUniform, coordFrame) {
