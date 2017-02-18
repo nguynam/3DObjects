@@ -8,7 +8,7 @@ class Recursive{
     constructor(gl, radius, subDiv, col1, col2){
         let side1 = [0,1,2];
         let side2 = [0,2,3];
-        let side3 = [0,3,1];
+        let side3 = [3,1,0];
         let base = [3,2,1];
         this.indicies = [];
         let vertices = [];
@@ -116,6 +116,7 @@ class Recursive{
                 var m1 = vec3.fromValues(m1X, m1Y, m1Z);
                 vec3.normalize(m1,m1);
                 vec3.scale(m1,m1,radius);
+                vertices.push(m1[0], m1[1], m1[2]);
                 var m1Index = vertexNum;
                 vertexNum++;
 
@@ -126,6 +127,7 @@ class Recursive{
                 var m2 = vec3.fromValues(m2X, m2Y, m2Z);
                 vec3.normalize(m2,m2);
                 vec3.scale(m2,m2,radius);
+                vertices.push(m2[0], m2[1], m2[2]);
                 var m2Index = vertexNum;
                 vertexNum++;
 
@@ -136,6 +138,7 @@ class Recursive{
                 var m3 = vec3.fromValues(m3X, m3Y, m3Z);
                 vec3.normalize(m3,m3);
                 vec3.scale(m3,m3,radius);
+                vertices.push(m3[0], m3[1], m3[2]);
                 var m3Index = vertexNum;
                 vertexNum++;
             }
