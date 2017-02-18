@@ -18,9 +18,9 @@ class Globe {
         if (typeof col2 === "undefined") col2 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         let height = radius;
         let topVertices = [];
-        let bottomVertices = [];
         let randColor = vec3.create();
         this.vbuff = gl.createBuffer();
+        this.stackIdxBuff = gl.createBuffer();
         let heightStep = height / verDiv;
         let circleStep = 90 / verDiv;
         let startAngle = 90 - circleStep;
@@ -41,11 +41,11 @@ class Globe {
         let firstCircle = [];
         let secondCircle = [];
         this.indices = [];
+        let stackIndex = [];
         let vertexNum = 1;
         let var2 = verDiv * 2;
         for (let i = 0; i < var2; i++) {
 
-            let stackIndex = [];
             if(i > 1){
                 firstCircle = secondCircle;
                 secondCircle = [];
@@ -77,20 +77,20 @@ class Globe {
             }
             startAngle -= circleStep;
             if(i >= 1){
+                var first = firstCircle[0];
+                var second = secondCircle[0];
                 for(var j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
                     stackIndex.push(secondCircle[j]);
                 }
-                stackIndex.push(stackIndex[0]);
-                stackIndex.push(stackIndex[1]);
-                this.stackIdxBuff = gl.createBuffer();
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
+                stackIndex.push(first);
+                stackIndex.push(second);
             }
-
-            var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
-            this.indices.push(x);
         }
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
+        var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
+        this.indices.push(x);
 
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
@@ -106,22 +106,10 @@ class Globe {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.topIdxBuff);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(topIndex), gl.STATIC_DRAW);
 
-        // Generate index order for bottom of cone
-        // let botIndex = [];
-        // botIndex.push(vertexNum);
-        // for (let k = vertexNum-1; k >= vertexNum-subDiv; k--)
-        //     botIndex.push(k);
-        // botIndex.push(botIndex[1]);
-        // this.botIdxBuff = gl.createBuffer();
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.botIdxBuff);
-        // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(botIndex), gl.STATIC_DRAW);
-
         /* Put the indices as an array of objects. Each object has three attributes:
          primitive, buffer, and numPoints */
         var top = {"primitive": gl.TRIANGLE_FAN, "buffer": this.topIdxBuff, "numPoints": topIndex.length};
-        //var bottom = {"primitive": gl.TRIANGLE_FAN, "buffer": this.botIdxBuff, "numPoints": botIndex.length};
         this.indices.push(top);
-        //this.indices.push(bottom);
     }
 
     /**

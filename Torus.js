@@ -19,6 +19,7 @@ class Torus {
         let vertices = [];
         let randColor = vec3.create();
         this.vbuff = gl.createBuffer();
+        this.stackIdxBuff = gl.createBuffer();
         let circleStep = 360 / verDiv;
         let startAngle = 0;
         let currentRadius;
@@ -32,15 +33,13 @@ class Torus {
         let firstCircle = [];
         let secondCircle = [];
         this.indices = [];
+        let stackIndex = [];
         let vertexNum = 0;
         for (let i = 0; i <= verDiv; i++) {
-
-            let stackIndex = [];
             if(i > 1){
                 firstCircle = secondCircle;
                 secondCircle = [];
             }
-
             let circRad = smallRadius * Math.cos(startAngle * (Math.PI / 180));
             let circHeight = (smallRadius * Math.sin(startAngle * (Math.PI / 180)));
             currentRadius = bigRadius + circRad;
@@ -69,31 +68,31 @@ class Torus {
             }
             startAngle += circleStep;
             if(i == verDiv){
+                var first = firstCircle[0];
+                var second = secondCircle[0];
                 for(var j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
                     stackIndex.push(equator[j]);
                 }
-                stackIndex.push(stackIndex[0]);
-                stackIndex.push(stackIndex[1]);
-                this.stackIdxBuff = gl.createBuffer();
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
+                stackIndex.push(first);
+                stackIndex.push(second);
             }
             else if(i >= 1 && i != verDiv){
+                var first = firstCircle[0];
+                var second = secondCircle[0];
                 for(var j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
                     stackIndex.push(secondCircle[j]);
                 }
-                stackIndex.push(stackIndex[0]);
-                stackIndex.push(stackIndex[1]);
-                this.stackIdxBuff = gl.createBuffer();
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
-            }
+                stackIndex.push(first);
+                stackIndex.push(second);
 
-            var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
-            this.indices.push(x);
+            }
         }
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
+        var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
+        this.indices.push(x);
 
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);

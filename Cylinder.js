@@ -19,6 +19,7 @@ class Cylinder {
         let randColor = vec3.create();
         let vertices = [];
         this.vbuff = gl.createBuffer();
+        this.stackIdxBuff = gl.createBuffer();
         let heightStep = height / verDiv;
         let radiusStep = (bottomRadius-topRadius)/verDiv;
         let radius = topRadius;
@@ -37,9 +38,9 @@ class Cylinder {
         var firstCircle = [];
         var secondCircle = [];
         this.indices = [];
+        let stackIndex = [];
         var vertexNum = 1;
         for (let i = 0; i < verDiv; i++) {
-            let stackIndex = [];
             if(i > 1){
                 firstCircle = secondCircle;
                 secondCircle = [];
@@ -75,20 +76,21 @@ class Cylinder {
             radius += radiusStep;
             height -= heightStep;
             if(i >= 1){
+                var first = firstCircle[0];
+                var second = secondCircle[0];
                 for(var j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
                     stackIndex.push(secondCircle[j]);
                 }
-                stackIndex.push(stackIndex[0]);
-                stackIndex.push(stackIndex[1]);
-                this.stackIdxBuff = gl.createBuffer();
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
+                stackIndex.push(first);
+                stackIndex.push(second);
             }
-
-            var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
-            this.indices.push(x);
         }
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
+        var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
+        this.indices.push(x);
+
         vertices.push(0, 0, 0);
         /* center of base */
         vec3.lerp(randColor, col1, col2, Math.random());
