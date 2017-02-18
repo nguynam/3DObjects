@@ -1,7 +1,6 @@
 /**
  * Created by NamNguyen on 2/17/17.
  */
-let vertices = [];
 let draw = [];
 let vertexNum = 4;
 
@@ -12,6 +11,7 @@ class Recursive{
         let side3 = [0,3,1];
         let base = [3,2,1];
         this.indicies = [];
+        let vertices = [];
 
         /* if colors are undefined, generate random colors */
         if (typeof col1 === "undefined") col1 = vec3.fromValues(Math.random(), Math.random(), Math.random());
@@ -75,6 +75,12 @@ class Recursive{
             draw.push(base[l]);
         }
 
+        //Call Recursive Function
+        recursive(subDiv, topPoint, basePoint1, basePoint2, 0, 1, 2);
+        recursive(subDiv, topPoint, basePoint2, basePoint3, 0, 2, 3);
+        recursive(subDiv, topPoint, basePoint3, basePoint1, 0, 3, 1);
+        recursive(subDiv, basePoint3, basePoint2, basePoint1, 3, 2, 1);
+
         this.stackIdxBuff = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(draw), gl.STATIC_DRAW);
@@ -83,6 +89,11 @@ class Recursive{
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
         gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertices), gl.STATIC_DRAW);
+
+        //Recursive Function
+        function recursive(N, a, b, c, na, nb, nc) {
+
+        }
     }
 
     /**
