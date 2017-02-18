@@ -1,6 +1,11 @@
 /**
  * Created by NamNguyen on 2/17/17.
  */
+let drawArray = [];
+let vertices = [];
+this.indices = [];
+let vertexNum = 4;
+
 class Recursive{
     constructor(gl, radius, subDiv, col1, col2){
         let side1 = [0,1,2];
@@ -8,10 +13,6 @@ class Recursive{
         let side3 = [0,3,1];
         let base = [3,2,1];
 
-        let vertices = [];
-        let draw = [];
-        this.indicies = [];
-        let vertexNum = 4;
         /* if colors are undefined, generate random colors */
         if (typeof col1 === "undefined") col1 = vec3.fromValues(Math.random(), Math.random(), Math.random());
         if (typeof col2 === "undefined") col2 = vec3.fromValues(Math.random(), Math.random(), Math.random());
@@ -62,23 +63,17 @@ class Recursive{
         vertices.push(randColor[0], randColor[1], randColor[2]);
 
         for(var i = 0; i < 3; i++){
-            draw.push(side1[i]);
-        }
-        for(var j = 0; j < 3; j++){
-            draw.push(side2[j]);
-        }
-        for(var k = 0; k < 3; k++){
-            draw.push(side3[k]);
-        }
-        for(var l = 0; l < 3; l++){
-            draw.push(base[l]);
+            drawArray.push(side1[i]);
+            drawArray.push(side2[i]);
+            drawArray.push(side3[i]);
+            drawArray.push(base[i]);
         }
 
         this.stackIdxBuff = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(draw), gl.STATIC_DRAW);
-        var x = {"primitive": gl.TRIANGLES, "buffer": this.stackIdxBuff, "numPoints": draw.length};
-        this.indicies.push(x);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(drawArray), gl.STATIC_DRAW);
+        var x = {"primitive": gl.TRIANGLES, "buffer": this.stackIdxBuff, "numPoints": drawArray.length};
+        this.indices.push(x);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
         gl.bufferData(gl.ARRAY_BUFFER, Float32Array.from(vertices), gl.STATIC_DRAW);
@@ -105,8 +100,8 @@ class Recursive{
         gl.vertexAttribPointer(colorAttr, 3, gl.FLOAT, false, 24, 12);
         /* (r,g,b) begins at offset 12 */
 
-        for (let k = 0; k < this.indicies.length; k++) {
-            let obj = this.indicies[k];
+        for (let k = 0; k < this.indices.length; k++) {
+            let obj = this.indices[k];
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.buffer);
             gl.drawElements(obj.primitive, obj.numPoints, gl.UNSIGNED_SHORT, 0);
         }
