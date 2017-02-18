@@ -122,7 +122,9 @@ function createObject() {
       break;
 
       case 4:
-        //recursive sphere
+        let rRadius = document.getElementById("recursive-radius").valueAsNumber;
+        let rSubDiv = document.getElementById("recursive-subdiv").valueAsNumber;
+        obj = new Recursive(gl, rRadius, rSubDiv);
         break;
 
       case 5:
