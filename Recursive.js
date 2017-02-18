@@ -92,7 +92,53 @@ class Recursive{
 
         //Recursive Function
         function recursive(N, a, b, c, na, nb, nc) {
+            if(N == 0){
+                //TO-DO
+            }
+            else{
+                //A
+                var aX = a[0];
+                var aY = a[1];
+                var aZ = a[2];
+                //B
+                var bX = b[0];
+                var bY = b[1];
+                var bZ = b[2];
+                //C
+                var cX = c[0];
+                var cY = c[1];
+                var cZ = c[2];
 
+                //Point A to B
+                var m1X = 0.5*(aX + bX);
+                var m1Y = 0.5*(aY + bY);
+                var m1Z = 0.5*(aZ + bZ);
+                var m1 = vec3.fromValues(m1X, m1Y, m1Z);
+                vec3.normalize(m1,m1);
+                vec3.scale(m1,m1,radius);
+                var m1Index = vertexNum;
+                vertexNum++;
+
+                //Point A to C
+                var m2X = 0.5*(aX + cX);
+                var m2Y = 0.5*(aY + cY);
+                var m2Z = 0.5*(aZ + cZ);
+                var m2 = vec3.fromValues(m2X, m2Y, m2Z);
+                vec3.normalize(m2,m2);
+                vec3.scale(m2,m2,radius);
+                var m2Index = vertexNum;
+                vertexNum++;
+
+                //Point B to C
+                var m3X = 0.5*(bX + cX);
+                var m3Y = 0.5*(bY + cY);
+                var m3Z = 0.5*(bZ + cZ);
+                var m3 = vec3.fromValues(m3X, m3Y, m3Z);
+                vec3.normalize(m3,m3);
+                vec3.scale(m3,m3,radius);
+                var m3Index = vertexNum;
+                vertexNum++;
+            }
         }
     }
 

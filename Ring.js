@@ -19,6 +19,7 @@ class Ring {
         let randColor = vec3.create();
         let vertices = [];
         this.vbuff = gl.createBuffer();
+        this.circIdxBuff = gl.createBuffer();
         let heightStep = height / verDiv;
         let currentRadius = outerRadius;
 
@@ -95,7 +96,6 @@ class Ring {
                 }
                 circIndex.push(circIndex[0]);
                 circIndex.push(circIndex[1]);
-                this.circIdxBuff = gl.createBuffer();
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.circIdxBuff);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(circIndex), gl.STATIC_DRAW);
 
