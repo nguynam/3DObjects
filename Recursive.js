@@ -94,6 +94,7 @@ class Recursive{
         function recursive(N, a, b, c, na, nb, nc) {
             if(N == 0){
                 //TO-DO
+                return;
             }
             else{
                 //A
@@ -117,6 +118,8 @@ class Recursive{
                 vec3.normalize(m1,m1);
                 vec3.scale(m1,m1,radius);
                 vertices.push(m1[0], m1[1], m1[2]);
+                vec3.lerp(randColor, col1, col2, Math.random());
+                vertices.push(randColor[0], randColor[1], randColor[2]);
                 var m1Index = vertexNum;
                 vertexNum++;
 
@@ -128,6 +131,8 @@ class Recursive{
                 vec3.normalize(m2,m2);
                 vec3.scale(m2,m2,radius);
                 vertices.push(m2[0], m2[1], m2[2]);
+                vec3.lerp(randColor, col1, col2, Math.random());
+                vertices.push(randColor[0], randColor[1], randColor[2]);
                 var m2Index = vertexNum;
                 vertexNum++;
 
@@ -139,8 +144,21 @@ class Recursive{
                 vec3.normalize(m3,m3);
                 vec3.scale(m3,m3,radius);
                 vertices.push(m3[0], m3[1], m3[2]);
+                vec3.lerp(randColor, col1, col2, Math.random());
+                vertices.push(randColor[0], randColor[1], randColor[2]);
                 var m3Index = vertexNum;
                 vertexNum++;
+
+                //Push to draw array
+                draw.push(na, m1Index, m2Index);
+                draw.push(nb, m3Index, m1Index);
+                draw.push(nc, m2Index, m3Index);
+                draw.push(m1Index, m3Index,m2Index);
+
+                recursive(N-1, a, m1, m2, na, m1Index, m2Index);
+                recursive(N-1, m1, b, m3, m1Index, nb, m3Index);
+                recursive(N-1, m3, c, m2, m3Index, nc, m2Index);
+                recursive(N-1, m3, m2, m1, m3Index, m2Index, m1Index);
             }
         }
     }
