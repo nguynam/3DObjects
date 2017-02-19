@@ -1,8 +1,8 @@
 /**
  * Created by NamNguyen on 2/17/17.
  */
-let draw = [];
-let vertexNum = 4;
+let draw;
+let vertexNum;
 
 class Recursive{
     constructor(gl, radius, subDiv, col1, col2){
@@ -12,6 +12,8 @@ class Recursive{
         let base = [3,2,1];
         this.indicies = [];
         let vertices = [];
+        draw = [];
+        vertexNum = 4;
 
         /* if colors are undefined, generate random colors */
         if (typeof col1 === "undefined") col1 = vec3.fromValues(Math.random(), Math.random(), Math.random());
