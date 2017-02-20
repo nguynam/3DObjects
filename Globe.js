@@ -1,16 +1,8 @@
 /**
- * Created by Hans Dulimarta on 2/1/17.
+ * Created by Joshua Crum and Nam Nguyen.
  */
 class Globe {
-    /**
-     * Create a 3D cone with tip at the Z+ axis and base on the XY plane
-     * @param {Object} gl      the current WebGL context
-     * @param {Number} radius  radius of the cone base
-     * @param {Number} height  height of the cone
-     * @param {Number} subDiv  number of radial subdivision of the cone base
-     * @param {vec3}   col1    color #1 to use
-     * @param {vec3}   col2    color #2 to use
-     */
+
     constructor(gl, radius, subDiv, verDiv, col1, col2) {
 
         /* if colors are undefined, generate random colors */
@@ -36,7 +28,6 @@ class Globe {
         vec3.lerp(randColor, col1, col2, Math.random());
         /* linear interpolation between two colors */
         topVertices.push(randColor[0], randColor[1], randColor[2]);
-        height -= heightStep;
 
         let firstCircle = [];
         let secondCircle = [];
@@ -77,9 +68,9 @@ class Globe {
             }
             startAngle -= circleStep;
             if(i >= 1){
-                var first = firstCircle[0];
-                var second = secondCircle[0];
-                for(var j = 0; j < subDiv; j++){
+                let first = firstCircle[0];
+                let second = secondCircle[0];
+                for(let j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
                     stackIndex.push(secondCircle[j]);
                 }
@@ -89,7 +80,7 @@ class Globe {
         }
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(stackIndex), gl.STATIC_DRAW);
-        var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
+        let x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
         this.indices.push(x);
 
         /* copy the (x,y,z,r,g,b) sixtuplet into GPU buffer */
@@ -108,7 +99,7 @@ class Globe {
 
         /* Put the indices as an array of objects. Each object has three attributes:
          primitive, buffer, and numPoints */
-        var top = {"primitive": gl.TRIANGLE_FAN, "buffer": this.topIdxBuff, "numPoints": topIndex.length};
+        let top = {"primitive": gl.TRIANGLE_FAN, "buffer": this.topIdxBuff, "numPoints": topIndex.length};
         this.indices.push(top);
     }
 

@@ -1,5 +1,5 @@
 /**
- * Created by NamNguyen on 2/17/17.
+ * Created by Nam Nguyen and Joshua Crum.
  */
 let draw;
 let vertexNum;
@@ -64,16 +64,16 @@ class Recursive{
         vec3.lerp(randColor, col1, col2, Math.random());
         vertices.push(randColor[0], randColor[1], randColor[2]);
 
-        for(var i = 0; i < 3; i++){
+        for(let i = 0; i < 3; i++){
             draw.push(side1[i]);
         }
-        for(var j = 0; j < 3; j++){
+        for(let j = 0; j < 3; j++){
             draw.push(side2[j]);
         }
-        for(var k = 0; k < 3; k++){
+        for(let k = 0; k < 3; k++){
             draw.push(side3[k]);
         }
-        for(var l = 0; l < 3; l++){
+        for(let l = 0; l < 3; l++){
             draw.push(base[l]);
         }
 
@@ -86,7 +86,7 @@ class Recursive{
         this.stackIdxBuff = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(draw), gl.STATIC_DRAW);
-        var x = {"primitive": gl.TRIANGLES, "buffer": this.stackIdxBuff, "numPoints": draw.length};
+        let x = {"primitive": gl.TRIANGLES, "buffer": this.stackIdxBuff, "numPoints": draw.length};
         this.indicies.push(x);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vbuff);
@@ -100,55 +100,55 @@ class Recursive{
             }
             else{
                 //A
-                var aX = a[0];
-                var aY = a[1];
-                var aZ = a[2];
+                let aX = a[0];
+                let aY = a[1];
+                let aZ = a[2];
                 //B
-                var bX = b[0];
-                var bY = b[1];
-                var bZ = b[2];
+                let bX = b[0];
+                let bY = b[1];
+                let bZ = b[2];
                 //C
-                var cX = c[0];
-                var cY = c[1];
-                var cZ = c[2];
+                let cX = c[0];
+                let cY = c[1];
+                let cZ = c[2];
 
                 //Point A to B
-                var m1X = 0.5*(aX + bX);
-                var m1Y = 0.5*(aY + bY);
-                var m1Z = 0.5*(aZ + bZ);
-                var m1 = vec3.fromValues(m1X, m1Y, m1Z);
+                let m1X = 0.5*(aX + bX);
+                let m1Y = 0.5*(aY + bY);
+                let m1Z = 0.5*(aZ + bZ);
+                let m1 = vec3.fromValues(m1X, m1Y, m1Z);
                 vec3.normalize(m1,m1);
                 vec3.scale(m1,m1,radius);
                 vertices.push(m1[0], m1[1], m1[2]);
                 vec3.lerp(randColor, col1, col2, Math.random());
                 vertices.push(randColor[0], randColor[1], randColor[2]);
-                var m1Index = vertexNum;
+                let m1Index = vertexNum;
                 vertexNum++;
 
                 //Point A to C
-                var m2X = 0.5*(aX + cX);
-                var m2Y = 0.5*(aY + cY);
-                var m2Z = 0.5*(aZ + cZ);
-                var m2 = vec3.fromValues(m2X, m2Y, m2Z);
+                let m2X = 0.5*(aX + cX);
+                let m2Y = 0.5*(aY + cY);
+                let m2Z = 0.5*(aZ + cZ);
+                let m2 = vec3.fromValues(m2X, m2Y, m2Z);
                 vec3.normalize(m2,m2);
                 vec3.scale(m2,m2,radius);
                 vertices.push(m2[0], m2[1], m2[2]);
                 vec3.lerp(randColor, col1, col2, Math.random());
                 vertices.push(randColor[0], randColor[1], randColor[2]);
-                var m2Index = vertexNum;
+                let m2Index = vertexNum;
                 vertexNum++;
 
                 //Point B to C
-                var m3X = 0.5*(bX + cX);
-                var m3Y = 0.5*(bY + cY);
-                var m3Z = 0.5*(bZ + cZ);
-                var m3 = vec3.fromValues(m3X, m3Y, m3Z);
+                let m3X = 0.5*(bX + cX);
+                let m3Y = 0.5*(bY + cY);
+                let m3Z = 0.5*(bZ + cZ);
+                let m3 = vec3.fromValues(m3X, m3Y, m3Z);
                 vec3.normalize(m3,m3);
                 vec3.scale(m3,m3,radius);
                 vertices.push(m3[0], m3[1], m3[2]);
                 vec3.lerp(randColor, col1, col2, Math.random());
                 vertices.push(randColor[0], randColor[1], randColor[2]);
-                var m3Index = vertexNum;
+                let m3Index = vertexNum;
                 vertexNum++;
 
                 //Push to draw array

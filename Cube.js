@@ -1,3 +1,6 @@
+/**
+ * Created by Joshua Crum and Nam Nguyen.
+ */
 class Cube {
 
     constructor (gl, size, subDiv, col1, col2) {
@@ -74,10 +77,10 @@ class Cube {
             for (let col = 0; col < subDiv; col++) {
                 vec3.lerp(randColor, col1, col2, Math.random());
 
-                right.push(xxx , size / 2, yyy)
+                right.push(xxx , size / 2, yyy);
                 right.push(randColor[0], randColor[1], randColor[2]);
 
-                left.push(xxx , -size / 2, yyy)
+                left.push(xxx , -size / 2, yyy);
                 left.push(randColor[0], randColor[1], randColor[2]);
                 yyy += step;
             }

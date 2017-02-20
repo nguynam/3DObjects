@@ -1,5 +1,6 @@
 /**
  * Created by Hans Dulimarta on 2/1/17.
+ * Modified by Joshua Crum and Nam Nguyen.
  */
 class Cone {
     /**
@@ -35,11 +36,11 @@ class Cone {
         vertices.push(randColor[0], randColor[1], randColor[2]);
         height -= heightStep;
 
-        var firstCircle = [];
-        var secondCircle = [];
+        let firstCircle = [];
+        let secondCircle = [];
         this.indices = [];
         let stackIndex = [];
-        var vertexNum = 1;
+        let vertexNum = 1;
         for (let i = 0; i < verDiv; i++) {
             if(i > 1){
                 firstCircle = secondCircle;
@@ -76,9 +77,9 @@ class Cone {
             radius += radiusStep;
             height -= heightStep;
             if(i >= 1){
-                var first = firstCircle[0];
-                var second = secondCircle[0];
-                for(var j = 0; j < subDiv; j++){
+                let first = firstCircle[0];
+                let second = secondCircle[0];
+                for(let j = 0; j < subDiv; j++){
                     stackIndex.push(firstCircle[j]);
                     stackIndex.push(secondCircle[j]);
                 }
@@ -88,7 +89,7 @@ class Cone {
         }
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.stackIdxBuff);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint8Array.from(stackIndex), gl.STATIC_DRAW);
-        var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
+        let x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": stackIndex.length};
         this.indices.push(x);
 
         vertices.push(0, 0, 0);
@@ -123,8 +124,8 @@ class Cone {
 
         /* Put the indices as an array of objects. Each object has three attributes:
          primitive, buffer, and numPoints */
-        var top = {"primitive": gl.TRIANGLE_FAN, "buffer": this.topIdxBuff, "numPoints": topIndex.length};
-        var bottom = {"primitive": gl.TRIANGLE_FAN, "buffer": this.botIdxBuff, "numPoints": botIndex.length};
+        let top = {"primitive": gl.TRIANGLE_FAN, "buffer": this.topIdxBuff, "numPoints": topIndex.length};
+        let bottom = {"primitive": gl.TRIANGLE_FAN, "buffer": this.botIdxBuff, "numPoints": botIndex.length};
         this.indices.push(top);
         this.indices.push(bottom);
     }

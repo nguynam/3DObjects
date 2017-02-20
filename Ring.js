@@ -1,16 +1,8 @@
 /**
- * Created by Hans Dulimarta on 2/1/17.
+ * Created by Joshua Crum and Nam Nguyen.
  */
 class Ring {
-    /**
-     * Create a 3D cone with tip at the Z+ axis and base on the XY plane
-     * @param {Object} gl      the current WebGL context
-     * @param {Number} radius  radius of the cone base
-     * @param {Number} height  height of the cone
-     * @param {Number} subDiv  number of radial subdivision of the cone base
-     * @param {vec3}   col1    color #1 to use
-     * @param {vec3}   col2    color #2 to use
-     */
+
     constructor(gl, outerRadius, innerRadius, height, subDiv, verDiv, col1, col2) {
 
         /* if colors are undefined, generate random colors */
@@ -28,15 +20,15 @@ class Ring {
          so each tuple (x,y,z,r,g,b) describes the properties of a vertex
          */
 
-        var firstCircle = [];
-        var secondCircle = [];
-        var firstOuterCircle = [];
-        var secondOuterCircle = [];
-        var firstInnerCircle = [];
-        var secondInnerCircle = [];
+        let firstCircle = [];
+        let secondCircle = [];
+        let firstOuterCircle = [];
+        let secondOuterCircle = [];
+        let firstInnerCircle = [];
+        let secondInnerCircle = [];
 
         this.indices = [];
-        var vertexNum = 0;
+        let vertexNum = 0;
         for (let i = 0; i < verDiv; i++) {
             let outerIndex = [];
             let innerIndex = [];
@@ -78,7 +70,6 @@ class Ring {
                         secondCircle.push(vertexNum);
                         vertexNum++;
                     }
-                    /* perimeter of base */
                     vec3.lerp(randColor, col1, col2, Math.random());
                     /* linear interpolation between two colors */
                     /* the next three floats are RGB */
@@ -88,9 +79,9 @@ class Ring {
             }
             currentRadius = outerRadius;
             height -= heightStep;
-            var last = verDiv - 1;
+            let last = verDiv - 1;
             if(i == 0){
-                for (var l = 0; l < subDiv; l++) {
+                for (let l = 0; l < subDiv; l++) {
                     circIndex.push(secondCircle[l]);
                     circIndex.push(firstCircle[l]);
                 }
@@ -99,11 +90,11 @@ class Ring {
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.circIdxBuff);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(circIndex), gl.STATIC_DRAW);
 
-                var y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
+                let y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
                 this.indices.push(y);
             }
             else if (i == last){
-                for (var l = 0; l < subDiv; l++) {
+                for (let l = 0; l < subDiv; l++) {
                     circIndex.push(firstCircle[l]);
                     circIndex.push(secondCircle[l]);
                 }
@@ -113,7 +104,7 @@ class Ring {
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.circIdxBuff);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(circIndex), gl.STATIC_DRAW);
 
-                var y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
+                let y = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.circIdxBuff, "numPoints": circIndex.length};
                 this.indices.push(y);
             }
             firstCircle = [];
@@ -138,9 +129,9 @@ class Ring {
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.innerIdxBuff);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, Uint16Array.from(innerIndex), gl.STATIC_DRAW);
 
-                var x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": outerIndex.length};
+                let x = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.stackIdxBuff, "numPoints": outerIndex.length};
                 this.indices.push(x);
-                var z = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.innerIdxBuff, "numPoints": innerIndex.length};
+                let z = {"primitive": gl.TRIANGLE_STRIP, "buffer": this.innerIdxBuff, "numPoints": innerIndex.length};
                 this.indices.push(z);
 
             }
@@ -177,8 +168,4 @@ class Ring {
             gl.drawElements(obj.primitive, obj.numPoints, gl.UNSIGNED_SHORT, 0);
         }
     }
-}
-function copyArray(arr){
-    //TO-DO
-
 }

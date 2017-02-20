@@ -1,5 +1,6 @@
 /**
  * Created by Hans Dulimarta.
+ * Modified by Joshua Crum and Nam Nguyen.
  */
 let modelMat = mat4.create();
 let canvas, paramGroup;
